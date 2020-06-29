@@ -1,22 +1,29 @@
 import { Router } from 'express';
 import UsersRepository from '../repositories/UsersRepository';
+import CreateUserService from '../services/CreateUserService';
 
 const routes = Router();
 const usersRepository = new UsersRepository();
 
 routes.get('/', (req, res) => res.json({ message: 'Hello Users' }));
 routes.post('/create', (req, res) => {
-  const { name, login, email, password } = req.body;
+  try {
+    const { name, login, email, password } = req.body;
 
-  const userExist = usersRepository.findUser(login);
+    const createUserService = new CreateUserService(usersRepository);
 
-  if (userExist) {
-    return res.status(400).json({ error: 'User login already exist' });
+    const user = createUserService.execute({ name, login, email, password });
+
+    return res.json(user);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
   }
+});
 
-  const user = usersRepository.create(name, login, email, password);
+routes.get('/list', (req, res) => {
+  const usersList = usersRepository.all();
 
-  return res.json(user);
+  return res.json(usersList);
 });
 
 export default routes;

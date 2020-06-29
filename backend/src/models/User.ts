@@ -14,7 +14,12 @@ class User {
 
   createdAt: Date;
 
-  constructor(name: string, login: string, email: string, password: string) {
+  constructor({
+    name,
+    login,
+    email,
+    password,
+  }: Omit<User, 'id' | 'createdAt'>) {
     this.id = uuid();
 
     this.name = name;
