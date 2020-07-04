@@ -46,6 +46,7 @@ describe('User Routes', () => {
     ],
   ];
 
+  // Add two different users and verify if they are correctly added
   it.each(users)(
     'Create User <%s> - Expect User Created, a valid id and creation date',
     async (_, user, userTemplate) => {
@@ -61,6 +62,7 @@ describe('User Routes', () => {
     },
   );
 
+  // Try to add a duplicated login, it should return an error message
   it('Try create duplicated login - Expect error message', async () => {
     const userInput = {
       login: 'userone',
@@ -79,6 +81,7 @@ describe('User Routes', () => {
     );
   });
 
+  // Try to add a duplicated e-mail, it should return an error message
   it('Try create duplicated e-mail - Expect error message', async () => {
     const userInput = {
       login: 'user-two',
@@ -97,6 +100,7 @@ describe('User Routes', () => {
     );
   });
 
+  // List all users, it should return two valid elements
   it('List Users - Expect two valid users', async () => {
     const userTemplate = [
       {
