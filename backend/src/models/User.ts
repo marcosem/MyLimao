@@ -1,19 +1,28 @@
-import { uuid } from 'uuidv4';
-import { startOfDay } from 'date-fns';
+// import { uuid } from 'uuidv4';
+// import { startOfDay } from 'date-fns';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+@Entity('users')
 class User {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column()
   name: string;
 
+  @Column()
   login: string;
 
+  @Column()
   email: string;
 
+  @Column()
   password: string;
 
+  @Column('timestamp with time zone')
   createdAt: Date;
 
+  /*
   constructor({
     name,
     login,
@@ -29,6 +38,7 @@ class User {
 
     this.createdAt = startOfDay(new Date());
   }
+  */
 }
 
 export default User;
