@@ -4,13 +4,18 @@
 import {
   Entity,
   Column,
+  // ForeignKey,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
+import User from './User';
+
 @Entity('users')
-class User {
+class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -18,13 +23,18 @@ class User {
   name: string;
 
   @Column()
-  login: string;
+  description: string;
 
   @Column()
-  email: string;
+  // @ForeignKey((u: User) => u.id)
+  owner_id: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'owner_id' })
+  owner: User;
 
   @Column()
-  password: string;
+  price: number;
 
   // @Column('timestamp with time zone')
   @CreateDateColumn()
@@ -39,7 +49,7 @@ class User {
     login,
     email,
     password,
-  }: Omit<User, 'id' | 'createdAt'>) {
+  }: Omit<Product, 'id' | 'createdAt'>) {
     this.id = uuid();
 
     this.name = name;
@@ -52,4 +62,4 @@ class User {
   */
 }
 
-export default User;
+export default Product;

@@ -1,4 +1,3 @@
-import { getCustomRepository } from 'typeorm';
 import User from '../models/User';
 import UsersRepository from '../repositories/UsersRepository';
 
@@ -10,29 +9,26 @@ interface RequestDTO {
 }
 
 class CreateUserService {
-  public async execute({
-    name,
-    login,
-    email,
-    password,
-  }: RequestDTO): Promise<User> {
-    const usersRepository = getCustomRepository(UsersRepository);
+  private usersRepository: UsersRepository;
 
+  constructor(usersRepository: UsersRepository) {
+    this.usersRepository = usersRepository;
+  }
+
+  public execute({ name, login, email, password }: RequestDTO): User {
     // Verify if user login already exist
-    const userLoginExist = await usersRepository.findUserByLogin(login);
+    const userLoginExist = this.usersRepository.findUserByLogin(login);
     if (userLoginExist) {
       throw Error('User login already exist');
     }
 
     // Verify is user email already exist
-    const userEmailExist = await usersRepository.findUserByEmail(email);
+    const userEmailExist = this.usersRepository.findUserByEmail(email);
     if (userEmailExist) {
       throw Error('User email already exist');
     }
 
-    const user = usersRepository.create({ name, login, email, password });
-
-    await usersRepository.save(user);
+    const user = this.usersRepository.create({ name, login, email, password });
 
     return user;
   }
