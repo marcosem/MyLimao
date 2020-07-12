@@ -36,6 +36,9 @@ class Product {
   @Column()
   price: number;
 
+  @Column()
+  price_old: number;
+
   // @Column('timestamp with time zone')
   @CreateDateColumn()
   created_at: Date;
