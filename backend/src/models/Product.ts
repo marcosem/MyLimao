@@ -1,10 +1,7 @@
 /* eslint-disable camelcase */
-// import { uuid } from 'uuidv4';
-// import { startOfDay } from 'date-fns';
 import {
   Entity,
   Column,
-  // ForeignKey,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
@@ -14,7 +11,7 @@ import {
 
 import User from './User';
 
-@Entity('users')
+@Entity('products')
 class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -26,7 +23,6 @@ class Product {
   description: string;
 
   @Column()
-  // @ForeignKey((u: User) => u.id)
   owner_id: string;
 
   @ManyToOne(() => User)
@@ -39,30 +35,11 @@ class Product {
   @Column()
   price_old: number;
 
-  // @Column('timestamp with time zone')
   @CreateDateColumn()
   created_at: Date;
 
   @UpdateDateColumn()
   updated_at: Date;
-
-  /*
-  constructor({
-    name,
-    login,
-    email,
-    password,
-  }: Omit<Product, 'id' | 'createdAt'>) {
-    this.id = uuid();
-
-    this.name = name;
-    this.login = login;
-    this.email = email;
-    this.password = password;
-
-    this.createdAt = startOfDay(new Date());
-  }
-  */
 }
 
 export default Product;

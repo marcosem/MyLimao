@@ -1,6 +1,7 @@
 import { getCustomRepository } from 'typeorm';
 import Product from '../models/Product';
 import ProductRepository from '../repositories/ProductsRepository';
+import UserRepository from '../repositories/UsersRepository';
 
 interface RequestDTO {
   name: string;
@@ -18,17 +19,25 @@ class CreateProductService {
     price,
     priceOld,
   }: RequestDTO): Promise<Product> {
-    const productsRepository = getCustomRepository(ProductRepository);
+    const usersRepository = getCustomRepository(UserRepository);
+
+    // Verify if user exist
+    const userExist = await usersRepository.findByIds([ownerId]);
+    if (userExist.length === 0) {
+      throw Error('Invalid Owner Id, the product require a valid user');
+    }
 
     // Verify if user already have this product
-    const productLoginExist = await productsRepository.findProductByName(
+    const productsRepository = getCustomRepository(ProductRepository);
+    const productNameExist = await productsRepository.findProductByName(
       name,
       ownerId,
     );
-    if (productLoginExist) {
+    if (productNameExist) {
       throw Error('The user already have a product with this name');
     }
 
+    // create product
     const product = productsRepository.create({
       name,
       description,
