@@ -6,44 +6,44 @@ import UserRepository from '../repositories/UsersRepository';
 interface RequestDTO {
   name: string;
   description: string;
-  ownerId: string;
+  owner_id: string;
   price: number;
-  priceOld: number;
+  price_old: number;
 }
 
 class CreateProductService {
   public async execute({
     name,
     description,
-    ownerId,
+    owner_id,
     price,
-    priceOld,
+    price_old,
   }: RequestDTO): Promise<Product> {
     const usersRepository = getCustomRepository(UserRepository);
 
     // Verify if user exist
-    const userExist = await usersRepository.findByIds([ownerId]);
+    const userExist = await usersRepository.findByIds([owner_id]);
     if (userExist.length === 0) {
-      throw Error('Invalid Owner Id, the product require a valid user');
+      throw Error('Invalid Owner Id, the product require a valid user.');
     }
 
     // Verify if user already have this product
     const productsRepository = getCustomRepository(ProductRepository);
     const productNameExist = await productsRepository.findProductByName(
       name,
-      ownerId,
+      owner_id,
     );
     if (productNameExist) {
-      throw Error('The user already have a product with this name');
+      throw Error('The user already have a product with this name.');
     }
 
     // create product
     const product = productsRepository.create({
       name,
       description,
-      owner_id: ownerId,
+      owner_id,
       price,
-      price_old: priceOld,
+      price_old,
     });
 
     await productsRepository.save(product);

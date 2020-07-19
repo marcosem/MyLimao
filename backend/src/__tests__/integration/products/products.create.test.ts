@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import request from 'supertest';
 import { isUuid, uuid } from 'uuidv4';
 import { parseISO, isToday } from 'date-fns';
@@ -17,7 +16,7 @@ describe('Products Routes', () => {
   }
 
   // let products;
-  let ownerId: string;
+  let owner_id: string;
 
   // It is necessary to add a user, so that you can add products for him
   beforeAll(async () => {
@@ -30,7 +29,7 @@ describe('Products Routes', () => {
 
     const response = await request(app).post('/users/create').send(userInput);
 
-    ownerId = response.body.id;
+    owner_id = response.body.id;
   });
 
   // afterAll(async () => {});
@@ -40,17 +39,17 @@ describe('Products Routes', () => {
     const product = {
       name: 'Product One',
       description: 'Product with One',
-      ownerId,
+      owner_id,
       price: 10.5,
-      priceOld: null,
+      price_old: null,
     };
 
     const productTemplate = {
       name: expect.stringMatching('Product One'),
       description: expect.stringMatching('Product with One'),
-      ownerId: expect.any(String),
+      owner_id: expect.any(String),
       price: expect.any(Number),
-      priceOld: expect.any(Number),
+      price_old: expect.any(Number),
     };
 
     const response = await request(app).post('/products/create').send(product);
@@ -66,17 +65,17 @@ describe('Products Routes', () => {
     const product = {
       name: 'Product Two',
       description: 'Product with Two',
-      ownerId,
+      owner_id,
       price: 10,
-      priceOld: 20.99,
+      price_old: 20.99,
     };
 
     const productTemplate = {
       name: expect.stringMatching('Product Two'),
       description: expect.stringMatching('Product with Two'),
-      ownerId: expect.any(String),
+      owner_id: expect.any(String),
       price: expect.any(Number),
-      priceOld: expect.any(Number),
+      price_old: expect.any(Number),
     };
 
     const response = await request(app).post('/products/create').send(product);
@@ -93,9 +92,9 @@ describe('Products Routes', () => {
     const product = {
       name: 'Product One',
       description: 'Product with One',
-      ownerId,
+      owner_id,
       price: 10.5,
-      priceOld: null,
+      price_old: null,
     };
 
     const response = await request(app).post('/products/create').send(product);
@@ -113,9 +112,9 @@ describe('Products Routes', () => {
     const product = {
       name: 'Product Three',
       description: 'Product with Three',
-      ownerId,
+      owner_id,
       price: 10.5,
-      priceOld: 9.5,
+      price_old: 9.5,
     };
 
     const response = await request(app).post('/products/create').send(product);
@@ -133,9 +132,9 @@ describe('Products Routes', () => {
     const product = {
       name: 'Product Invalid Id',
       description: 'Product with Invalid Id',
-      ownerId: 'invalid',
+      owner_id: 'invalid',
       price: 10.5,
-      priceOld: null,
+      price_old: null,
     };
 
     const response = await request(app).post('/products/create').send(product);
@@ -153,9 +152,9 @@ describe('Products Routes', () => {
     const product = {
       name: 'Product Invalid Id',
       description: 'Product with Invalid Id',
-      ownerId: uuid(),
+      owner_id: uuid(),
       price: 10.5,
-      priceOld: null,
+      price_old: null,
     };
 
     const response = await request(app).post('/products/create').send(product);
@@ -187,7 +186,7 @@ describe('Products Routes', () => {
       },
     ];
 
-    const response = await request(app).get(`/products/list/${ownerId}`);
+    const response = await request(app).get(`/products/list/${owner_id}`);
 
     // Verify body contains an array of two valid objects
     expect(response.body).toMatchObject(productTemplate);

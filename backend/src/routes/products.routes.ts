@@ -3,17 +3,17 @@ import { getCustomRepository } from 'typeorm';
 import ProductsRepository from '../repositories/ProductsRepository';
 import CreateProductService from '../services/CreateProductService';
 
-const routes = Router();
+const productsRouter = Router();
 
-routes.post('/create', async (req, res) => {
+productsRouter.post('/create', async (req, res) => {
   try {
-    const { name, description, ownerId, price, priceOld } = req.body;
+    const { name, description, owner_id, price, price_old } = req.body;
 
-    if (priceOld) {
-      if (priceOld <= price) {
+    if (price_old) {
+      if (price_old <= price) {
         return res
           .status(400)
-          .json({ error: 'The new price should be lower than the old one' });
+          .json({ error: 'The new price should be lower than the old one.' });
       }
     }
 
@@ -22,9 +22,9 @@ routes.post('/create', async (req, res) => {
     const product = await createProductService.execute({
       name,
       description,
-      ownerId,
+      owner_id,
       price,
-      priceOld,
+      price_old,
     });
 
     return res.json(product);
@@ -33,7 +33,7 @@ routes.post('/create', async (req, res) => {
   }
 });
 
-routes.get('/list/:id', async (req, res) => {
+productsRouter.get('/list/:id', async (req, res) => {
   const { id } = req.params;
 
   const productsRepository = getCustomRepository(ProductsRepository);
@@ -49,4 +49,4 @@ routes.get('/list/:id', async (req, res) => {
   return res.json(productsList);
 });
 
-export default routes;
+export default productsRouter;

@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import request from 'supertest';
 import { isUuid } from 'uuidv4';
 import { parseISO, isToday } from 'date-fns';
@@ -28,7 +27,7 @@ describe('User Routes', () => {
         login: expect.stringMatching('userone'),
         email: expect.stringMatching('userone@test.com'),
         name: expect.stringMatching('User One'),
-        password: expect.stringMatching('123456'),
+        // password: expect.stringMatching('123456'),
       },
     ],
     [
@@ -43,7 +42,7 @@ describe('User Routes', () => {
         login: expect.stringMatching('usertwo'),
         email: expect.stringMatching('usertwo@test.com'),
         name: expect.stringMatching('User Two'),
-        password: expect.stringMatching('123456'),
+        // password: expect.stringMatching('123456'),
       },
     ],
   ];
@@ -56,6 +55,9 @@ describe('User Routes', () => {
 
       // Expect User information to be returned
       expect(response.body).toMatchObject(userTemplate);
+
+      // Expect no user password is returned
+      expect(response.body.password).toBeUndefined();
 
       // Expect to have a valid user id
       expect(isUuid(response.body.id)).toBe(true);
