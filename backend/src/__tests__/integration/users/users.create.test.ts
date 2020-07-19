@@ -1,13 +1,10 @@
 /* eslint-disable camelcase */
 import request from 'supertest';
 import { isUuid } from 'uuidv4';
-// import { getCustomRepository } from 'typeorm';
 import { parseISO, isToday } from 'date-fns';
 import app from '../../../app';
-// import User from '../../../models/User';
-// import UserRepository from '../../../repositories/UsersRepository';
 
-describe.skip('User Routes', () => {
+describe('User Routes', () => {
   interface User {
     id: string;
     name: string;
@@ -50,23 +47,6 @@ describe.skip('User Routes', () => {
       },
     ],
   ];
-
-  // Reset user list by removing test users before testing
-  /*
-  beforeAll(async () => {
-    const usersRepository = getCustomRepository(UserRepository);
-    await usersRepository.delete({ name: 'User One' });
-    await usersRepository.delete({ name: 'User Two' });
-  });
-
-  /*
-  // Reset user list by remmoving test users after testing
-  afterAll(async () => {
-    const usersRepository = getCustomRepository(UserRepository);
-    await usersRepository.delete({ name: 'User One' });
-    await usersRepository.delete({ name: 'User Two' });
-  });
-  */
 
   // Add two different users and verify if they are correctly added
   it.each(users)(

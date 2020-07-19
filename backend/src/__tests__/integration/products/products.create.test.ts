@@ -2,9 +2,7 @@
 import request from 'supertest';
 import { isUuid, uuid } from 'uuidv4';
 import { parseISO, isToday } from 'date-fns';
-// import { getCustomRepository } from 'typeorm';
 import app from '../../../app';
-// import UserRepository from '../../../repositories/UsersRepository';
 
 describe('Products Routes', () => {
   interface Product {
@@ -18,34 +16,11 @@ describe('Products Routes', () => {
     updated_at: string;
   }
 
-  /*
-  interface InputProduct {
-    name: string;
-    description: string;
-    ownerId: string;
-    price: number;
-    priceOld: number;
-  }
-  */
-
   // let products;
   let ownerId: string;
 
   // It is necessary to add a user, so that you can add products for him
   beforeAll(async () => {
-    /*
-    const usersRepository = getCustomRepository(UserRepository);
-
-    const user = usersRepository.create({
-      name: 'User Owner',
-      login: 'userOwner',
-      email: 'userOwner@test.com',
-      password: '1234567',
-    });
-
-    await usersRepository.save(user);
-    */
-
     const userInput = {
       name: 'User Owner',
       login: 'userOwner',
@@ -56,54 +31,9 @@ describe('Products Routes', () => {
     const response = await request(app).post('/users/create').send(userInput);
 
     ownerId = response.body.id;
-
-    /*
-    products = [
-      [
-        'Product One',
-        {
-          name: 'Product One',
-          description: 'Product with One',
-          ownerId,
-          price: 10.5,
-          priceOld: null,
-        },
-        {
-          name: expect.stringMatching('Product One'),
-          description: expect.stringMatching('Product with One'),
-          ownerId: expect.any(String),
-          price: expect(10.5),
-          priceOld: expect(null),
-        },
-      ],
-      [
-        'Product Two',
-        {
-          name: 'Product Two',
-          description: 'Product with Two',
-          ownerId,
-          price: 20.99,
-          priceOld: 10,
-        },
-        {
-          name: expect.stringMatching('Product Two'),
-          description: expect.stringMatching('Product with Two'),
-          ownerId: expect.any(String),
-          price: expect(20.99),
-          priceOld: expect(10),
-        },
-      ],
-    ];
-    */
   });
 
-  afterAll(async () => {
-    /*
-    const usersRepository = getCustomRepository(UserRepository);
-
-    await usersRepository.delete(ownerId);
-    */
-  });
+  // afterAll(async () => {});
 
   // Add two different users and verify if they are correctly added
   it('Create Product <Product One> - Expect Product created with a valid id', async () => {
@@ -157,23 +87,6 @@ describe('Products Routes', () => {
     // Expect to have a valid user id
     expect(isUuid(response.body.id)).toBe(true);
   });
-
-  /*
-  it.each(products)(
-    'Create Product <%s> - Expect Product created with a valid id',
-    async (_, product, productTemplate) => {
-      const response = await request(app)
-        .post('/products/create')
-        .send(product);
-
-      // Expect User information to be returned
-      expect(response.body).toMatchObject(productTemplate);
-
-      // Expect to have a valid user id
-      expect(isUuid(response.body.id)).toBe(true);
-    },
-  );
-  */
 
   // Try add a duplicate produ
   it('Try add a duplicate product for the same user - Expect error message', async () => {
