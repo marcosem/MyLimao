@@ -168,7 +168,7 @@ describe('Products Routes', () => {
   });
 
   // List all products, it should return two valid elements
-  it('List Users - Expect two valid users', async () => {
+  it('List Products - Expect two valid products', async () => {
     const productTemplate = [
       {
         name: expect.any(String),

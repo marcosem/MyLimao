@@ -3,6 +3,7 @@ import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import User from '../models/User';
 import UsersRepository from '../repositories/UsersRepository';
+import authConfig from '../config/auth';
 
 interface RequestDTO {
   login: string;
@@ -45,10 +46,12 @@ class AuthenticateUserService {
       throw new Error('Incorrect login validation.');
     }
 
+    const { secret, expiresIn } = authConfig.jwt;
+
     // Generate token
-    const token = sign({}, '17eaad15da1efc6111a852a625b3f757', {
+    const token = sign({}, secret, {
       subject: user.id,
-      expiresIn: '1d',
+      expiresIn,
     });
 
     return {

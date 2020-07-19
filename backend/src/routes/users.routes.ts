@@ -34,7 +34,14 @@ usersRouter.get('/list', async (req, res) => {
   const usersRepository = getCustomRepository(UsersRepository);
   const usersList = await usersRepository.find();
 
-  return res.json(usersList);
+  // remove passwords
+  const usersListProtected = usersList.map(user => {
+    const newUser = user;
+    delete newUser.password;
+    return newUser;
+  });
+
+  return res.json(usersListProtected);
 });
 
 export default usersRouter;

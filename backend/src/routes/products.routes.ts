@@ -3,11 +3,20 @@ import { getCustomRepository } from 'typeorm';
 import ProductsRepository from '../repositories/ProductsRepository';
 import CreateProductService from '../services/CreateProductService';
 
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
+
 const productsRouter = Router();
 
+productsRouter.use(ensureAuthenticated);
+
+// productsRouter.post('/create', ensureAuthenticated, async (req, res) => {
 productsRouter.post('/create', async (req, res) => {
   try {
     const { name, description, owner_id, price, price_old } = req.body;
+
+    if (req.user.id !== owner_id) {
+      return res.status(401).json({ error: 'User not authorized.' });
+    }
 
     if (price_old) {
       if (price_old <= price) {
@@ -35,6 +44,10 @@ productsRouter.post('/create', async (req, res) => {
 
 productsRouter.get('/list/:id', async (req, res) => {
   const { id } = req.params;
+
+  if (req.user.id !== id) {
+    return res.status(401).json({ error: 'User not authorized.' });
+  }
 
   const productsRepository = getCustomRepository(ProductsRepository);
   const productsList = await productsRepository.find({
