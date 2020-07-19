@@ -24,7 +24,7 @@ class CreateProductService {
     // Verify if user exist
     const userExist = await usersRepository.findByIds([owner_id]);
     if (userExist.length === 0) {
-      throw Error('Invalid Owner Id, the product require a valid user.');
+      throw new Error('Invalid Owner Id, the product require a valid user.');
     }
 
     // Verify if user already have this product
@@ -34,7 +34,7 @@ class CreateProductService {
       owner_id,
     );
     if (productNameExist) {
-      throw Error('The user already have a product with this name.');
+      throw new Error('The user already have a product with this name.');
     }
 
     // create product

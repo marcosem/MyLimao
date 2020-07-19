@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import usersRoutes from './users.routes';
-import productsRoutes from './products.routes';
+import usersRouter from './users.routes';
+import productsRouter from './products.routes';
+import sessionsRouter from './sessions.routes';
 
 const routes = Router();
 
-routes.get('/', (req, res) => res.json({ message: 'Hello World' }));
-
-routes.use('/users', usersRoutes);
-routes.use('/products', productsRoutes);
+routes.use('/users', usersRouter);
+routes.use('/products', productsRouter);
+routes.use('/sessions', sessionsRouter);
 
 export default routes;

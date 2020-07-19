@@ -22,13 +22,13 @@ class CreateUserService {
     // Verify if user login already exist
     const userLoginExist = await usersRepository.findUserByLogin(login);
     if (userLoginExist) {
-      throw Error('User login already exist.');
+      throw new Error('User login already exist.');
     }
 
     // Verify is user email already exist
     const userEmailExist = await usersRepository.findUserByEmail(email);
     if (userEmailExist) {
-      throw Error('Email address already exist.');
+      throw new Error('Email address already exist.');
     }
 
     const hashedPassword = await hash(password, 8);
