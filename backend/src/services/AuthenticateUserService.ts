@@ -1,5 +1,6 @@
 import { getCustomRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
 import User from '../models/User';
 import UsersRepository from '../repositories/UsersRepository';
 
@@ -10,6 +11,7 @@ interface RequestDTO {
 
 interface Response {
   user: User;
+  token: string;
 }
 
 class AuthenticateUserService {
@@ -36,15 +38,22 @@ class AuthenticateUserService {
       }
     }
 
+    // Validate password
     const passwordMatched = await compare(password, user.password);
 
     if (!passwordMatched) {
       throw new Error('Incorrect login validation.');
     }
 
-    // User authenticated
+    // Generate token
+    const token = sign({}, '17eaad15da1efc6111a852a625b3f757', {
+      subject: user.id,
+      expiresIn: '1d',
+    });
+
     return {
       user,
+      token,
     };
   }
 }
