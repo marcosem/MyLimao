@@ -1,12 +1,18 @@
 import { Router } from 'express';
+import multer from 'multer';
 import { getCustomRepository } from 'typeorm';
+import uploadConfig from '../config/upload';
+
 import UsersRepository from '../repositories/UsersRepository';
 import CreateUserService from '../services/CreateUserService';
 
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
+
 const usersRouter = Router();
+const upload = multer(uploadConfig);
 
 // usersRouter.get('/', (req, res) => res.json({ message: 'Hello Users' }));
-usersRouter.post('/create', async (req, res) => {
+usersRouter.post('/', async (req, res) => {
   try {
     const { name, login, email, password } = req.body;
 
@@ -43,5 +49,14 @@ usersRouter.get('/list', async (req, res) => {
 
   return res.json(usersListProtected);
 });
+
+usersRouter.patch(
+  '/avatar',
+  ensureAuthenticated,
+  upload.single('avatar'),
+  async (req, res) => {
+    return res.json({ ok: true });
+  },
+);
 
 export default usersRouter;
