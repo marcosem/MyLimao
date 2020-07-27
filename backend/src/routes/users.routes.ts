@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import multer from 'multer';
 import { getCustomRepository } from 'typeorm';
 import uploadConfig from '../config/upload';
@@ -12,7 +12,6 @@ import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 const usersRouter = Router();
 const upload = multer(uploadConfig);
 
-// usersRouter.get('/', (req, res) => res.json({ message: 'Hello Users' }));
 usersRouter.post('/', async (req, res) => {
   try {
     const { name, login, email, password } = req.body;
@@ -36,6 +35,8 @@ usersRouter.post('/', async (req, res) => {
     return res.status(400).json({ error: err.message });
   }
 });
+
+usersRouter.use('/image', express.static(uploadConfig.directory));
 
 usersRouter.get('/list', async (req, res) => {
   const usersRepository = getCustomRepository(UsersRepository);
