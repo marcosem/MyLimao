@@ -4,6 +4,7 @@ import { sign } from 'jsonwebtoken';
 import User from '../models/User';
 import UsersRepository from '../repositories/UsersRepository';
 import authConfig from '../config/auth';
+import AppError from '../errors/AppError';
 
 interface RequestDTO {
   login: string;
@@ -29,13 +30,13 @@ class AuthenticateUserService {
       // Verify is user email already exist
       user = await usersRepository.findUserByEmail(login);
       if (!user) {
-        throw new Error('Incorrect login validation.');
+        throw new AppError('Incorrect login validation.', 401);
       }
     } else {
       // Verify if user login already exist
       user = await usersRepository.findUserByLogin(login);
       if (!user) {
-        throw new Error('Incorrect login validation.');
+        throw new AppError('Incorrect login validation.', 401);
       }
     }
 
@@ -43,7 +44,7 @@ class AuthenticateUserService {
     const passwordMatched = await compare(password, user.password);
 
     if (!passwordMatched) {
-      throw new Error('Incorrect login validation.');
+      throw new AppError('Incorrect login validation.', 401);
     }
 
     const { secret, expiresIn } = authConfig.jwt;

@@ -2,6 +2,7 @@ import { getCustomRepository } from 'typeorm';
 import { hash } from 'bcryptjs';
 import User from '../models/User';
 import UsersRepository from '../repositories/UsersRepository';
+import AppError from '../errors/AppError';
 
 interface RequestDTO {
   name: string;
@@ -22,13 +23,13 @@ class CreateUserService {
     // Verify if user login already exist
     const userLoginExist = await usersRepository.findUserByLogin(login);
     if (userLoginExist) {
-      throw new Error('User login already exist.');
+      throw new AppError('User login already exist.', 409);
     }
 
     // Verify is user email already exist
     const userEmailExist = await usersRepository.findUserByEmail(email);
     if (userEmailExist) {
-      throw new Error('Email address already exist.');
+      throw new AppError('Email address already exist.', 409);
     }
 
     const hashedPassword = await hash(password, 8);

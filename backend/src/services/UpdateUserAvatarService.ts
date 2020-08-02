@@ -4,6 +4,7 @@ import fs from 'fs';
 import User from '../models/User';
 import UsersRepository from '../repositories/UsersRepository';
 import uploadConfig from '../config/upload';
+import AppError from '../errors/AppError';
 
 interface RequestDTO {
   user_id: string;
@@ -18,7 +19,7 @@ class UpdateUserAvatarService {
     // console.log(user);
 
     if (!user) {
-      throw new Error('Only authenticated users can change avatar');
+      throw new AppError('Only authenticated users can change avatar', 401);
     }
 
     if (user.avatar) {

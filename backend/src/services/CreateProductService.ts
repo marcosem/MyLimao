@@ -2,6 +2,7 @@ import { getCustomRepository } from 'typeorm';
 import Product from '../models/Product';
 import ProductRepository from '../repositories/ProductsRepository';
 import UserRepository from '../repositories/UsersRepository';
+import AppError from '../errors/AppError';
 
 interface RequestDTO {
   name: string;
@@ -24,7 +25,10 @@ class CreateProductService {
     // Verify if user exist
     const userExist = await usersRepository.findByIds([owner_id]);
     if (userExist.length === 0) {
-      throw new Error('Invalid Owner Id, the product require a valid user.');
+      throw new AppError(
+        'Invalid Owner Id, the product require a valid user.',
+        401,
+      );
     }
 
     // Verify if user already have this product
@@ -34,7 +38,10 @@ class CreateProductService {
       owner_id,
     );
     if (productNameExist) {
-      throw new Error('The user already have a product with this name.');
+      throw new AppError(
+        'The user already have a product with this name.',
+        409,
+      );
     }
 
     // create product

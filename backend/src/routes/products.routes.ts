@@ -38,7 +38,7 @@ productsRouter.post('/create', async (req, res) => {
 
     return res.json(product);
   } catch (err) {
-    return res.status(400).json({ error: err.message });
+    return res.status(err.statusCode).json({ error: err.message });
   }
 });
 
